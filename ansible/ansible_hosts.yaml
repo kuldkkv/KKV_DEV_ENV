@@ -1,0 +1,18 @@
+all:
+    children:
+        linux_hosts:
+            hosts:
+                centos:
+        openbsd_hosts:
+            hosts:
+                openbsd.32:
+                openbsd.64: 
+                    ansible_user: dev1
+            vars:
+                ansible_python_interpreter: /usr/local/bin/python3
+        others:
+            hosts:
+                centos:
+                openbsd.32:
+                    vars:
+                        ansible_python_interpreter: /usr/local/bin/python3
