@@ -1,8 +1,0 @@
-centos
-
-[openbsd_hosts]
-openbsd.32
-openbsd.64
-
-[openbsd_hosts:vars]
-ansible_python_interpreter=/usr/local/bin/python3

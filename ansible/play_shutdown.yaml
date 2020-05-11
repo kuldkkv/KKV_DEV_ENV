@@ -1,0 +1,10 @@
+---
+- hosts: linux_hosts
+  tasks:
+  - name: Shutdown linux servers
+    shell: sudo shutdown -P now
+
+- hosts: openbsd_hosts
+  tasks:
+  - name: Running shutdown on openbsd servers
+    shell: sudo shutdown -p now

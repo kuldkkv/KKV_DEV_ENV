@@ -1,0 +1,12 @@
+---
+- hosts: openbsd_hosts
+  tasks:
+  - name: running cmd on openbsd hosts
+    shell: whoami
+
+- hosts: linux_hosts
+  tasks:
+    - name: running cmd on linux hosts
+      shell: cat /etc/os-release
+    - command: date
+      when: result is succeeded
