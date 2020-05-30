@@ -7,6 +7,8 @@ export PATH=$PATH:.
 #export PS1='$(logname)@$(hostname -s):$PWD % '
 export PS1=$'\E[34;7m$(logname)@$(hostname -s)\E[0m:\E[32;1m$PWD\E[0m$ '
 
+alias vi='vim'
+
 set -o vi
 echo "done"
 
