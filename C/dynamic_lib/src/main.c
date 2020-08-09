@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "/home/kkv/DEV/C/static_lib/src/lib_mylib.h"
+#include "/home/kkv/KKV_DEV_ENV/C/static_lib/src/lib_mylib.h"
 
 int main()
 {

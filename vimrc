@@ -1,0 +1,9 @@
+se nu
+se sm
+se background=dark
+se ts=4
+se shiftwidth=4
+se expandtab
+se ai
+syntax on
+se smartindent
