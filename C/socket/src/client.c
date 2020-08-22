@@ -7,14 +7,13 @@
 #include <stdlib.h>
 #define PORT 8080
 
-int 
+int
 main(int argc, char const * argv[])
 {
 	int 		sock = 0, valread;
 	struct sockaddr_in serv_addr;
-	char           *hello = "Hello from client";
-	char 		mesg     [1024];
-	char 		buffer   [1024] = {0};
+	char 		mesg     [BUFSIZ];
+	char 		buffer   [BUFSIZ];
 	if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		printf("\n Socket creation error \n");
 		return -1;
@@ -33,20 +32,17 @@ main(int argc, char const * argv[])
 	}
 	for (;;) {
 		printf("enter message: ");
-		//scanf("%s", mesg);
-        if (fgets(mesg, sizeof(mesg), stdin) == NULL)   {
-            printf("client ended\n");
-            break;
-        }
-        mesg[strlen(mesg)-1] = '\0';
-        if (strlen(mesg) <= 0)
-            break;
+		if (fgets(mesg, sizeof(mesg), stdin) == NULL) {
+			printf("client ended\n");
+			break;
+		}
+		mesg[strlen(mesg) - 1] = '\0';
 		if (write(sock, mesg, strlen(mesg)) < 0) {
 			perror("write");
 			exit(EXIT_FAILURE);
 		}
 		printf("\nmessage sent\n");
-		if ((valread = read(sock, buffer, 1024)) < 0) {
+		if ((valread = read(sock, buffer, BUFSIZ)) < 0) {
 			perror("read");
 			exit(EXIT_FAILURE);
 		}
