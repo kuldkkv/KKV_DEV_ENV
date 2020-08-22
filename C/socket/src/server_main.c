@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "server.h"
 
 #define PORT 8080
 
@@ -11,7 +12,7 @@
 int 
 main(int argc, char **argv)
 {
-	int 		server_fd, new_socket, valread;
+	int 		server_fd, client_socket_fd, valread;
 	struct sockaddr_in address;
 	int 		opt = 1;
 	int 		addrlen = sizeof(address);
@@ -22,12 +23,6 @@ main(int argc, char **argv)
 		perror("socket failed");
 		exit(EXIT_FAILURE);
 	}
-	/*
-        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))  {
-            perror("setsockopt");
-            exit(EXIT_FAILURE);
-        }
-        */
 
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
@@ -37,27 +32,18 @@ main(int argc, char **argv)
 		perror("bind");
 		exit(EXIT_FAILURE);
 	}
-	printf("before listen\n");
 	if (listen(server_fd, 3) < 0) {
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
+    printf("server up and running ... ");
 	for (;;) {
 		printf("waiting for client\n");
-		new_socket = accept(server_fd, (struct sockaddr *) & address, (socklen_t *) & addrlen);
+		client_socket_fd = accept(server_fd, (struct sockaddr *) & address, (socklen_t *) & addrlen);
 		if (fork() == 0) {
-			for (;;) {
-				valread = read(new_socket, buffer, BUFSIZ);
-				if (valread < 0) {
-					printf("client ended\n");
-					break;
-				}
-                buffer[valread] = '\0';
-				printf("from client: [%s]\n", buffer);
-				send(new_socket, hello, strlen(hello), 0);
-				printf("sent %s\n", hello);
-			}
-			close(new_socket);
+            close(server_fd);
+            client_handler(client_socket_fd);
+			close(client_socket_fd);
 			exit(0);
 		}
 	}

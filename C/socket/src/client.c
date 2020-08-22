@@ -33,8 +33,13 @@ main(int argc, char const * argv[])
 	}
 	for (;;) {
 		printf("enter message: ");
-		scanf("%s", mesg);
-        if (strlen(mesg) < 0)
+		//scanf("%s", mesg);
+        if (fgets(mesg, sizeof(mesg), stdin) == NULL)   {
+            printf("client ended\n");
+            break;
+        }
+        mesg[strlen(mesg)-1] = '\0';
+        if (strlen(mesg) <= 0)
             break;
 		if (write(sock, mesg, strlen(mesg)) < 0) {
 			perror("write");
