@@ -1,0 +1,55 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.39">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.7.1"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@1.7.1">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description>Test pipeline for understanding Jenkins</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.82">
+    <script>pipeline {
+    agent any 
+        stages {
+            stage(&apos;Build&apos;) {
+                steps {
+                    sh &apos;echo &quot;This is from build&quot;&apos;
+                    sh &apos;pwd&apos;
+                    sh &apos;id&apos;
+                    sh &apos;/home/kkv/JENKINS/a_simple_script.sh&apos;
+                }
+            }
+            stage(&apos;Sanity check&apos;) {
+                steps {
+                    input &quot;Proceed with deployment?&quot;
+                }
+            }
+            stage(&apos;Deploy&apos;) {
+                steps {
+                    sh &apos;echo &quot;This is from deployment&quot;&apos;
+                    sh &apos;cal&apos;
+                }
+            }
+        }
+        post {
+            always {
+                echo &quot;post always&quot;
+            }
+            success {
+                echo &quot;post success&quot;
+            }
+            failure {
+                echo &quot;post failure&quot;
+            }
+        }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
