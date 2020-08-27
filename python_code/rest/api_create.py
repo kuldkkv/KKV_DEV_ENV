@@ -5,6 +5,7 @@ from flask_restful import Resource, Api
 from json import dumps
 #from flask.ext.jsonpify import jsonify
 import psycopg2
+from waitress import serve
 
 
 class Employees(Resource):
@@ -14,8 +15,8 @@ class Employees(Resource):
     def get(self):
         #return {'employees' : [1, 2, 3, 4, 5]}
         self.cur = self.conn.cursor()
-        self.cur.execute('select emp_id from employee');
-        return {'employees' : [i[0] for i in self.cur.fetchall()]}
+        self.cur.execute('select * from employee');
+        return {'employees' : [str(i[0]) + ':' + i[1] + ':' + i[2] for i in self.cur.fetchall()]}
         self.cur.close()
 
 
@@ -26,7 +27,7 @@ class Dept(Resource):
     def get(self):
         self.cur = self.conn.cursor()
         self.cur.execute('select * from dept')
-        return {'dept' : [[0] for i in self.cur.fetchall()]}
+        return {'dept' : [str(i[0]) + ':' + i[1] for i in self.cur.fetchall()]}
         self.cur.close()
         #return {'dept' : ['D1', 'D2', 'D3', 'D4 a', 'D4 b', 'D5', 'D6']}
 
@@ -57,7 +58,9 @@ def main():
     api.add_resource(Dept, '/dept')
     api.add_resource(Employee, '/employee/<employee_id>')
 
-    app.run(port = '5002')
+    #app.run(host = '0.0.0.0', port = '5002')
+    serve(app, host = '0.0.0.0', port = '5002')
+
 
 
 if __name__ == '__main__':
