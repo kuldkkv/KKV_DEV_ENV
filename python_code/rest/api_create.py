@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
-from flask import Flask, request
+from flask import Flask, request, abort
 from flask_restful import Resource, Api
 from json import dumps
 #from flask.ext.jsonpify import jsonify
 import psycopg2
 from waitress import serve
+from werkzeug.exceptions import BadRequest
 
 
 class Employees(Resource):
@@ -46,7 +47,18 @@ class Employee(Resource):
         elif emp_id == 5:
             return {'employee' : {'id' : 5, 'name' : 'employee 5'}}
         else:
-            return None
+            #raise HTTPException(status_code=404, detail="Item not found")
+            #abort (400, 'No such employee exists')
+            #raise BadRequest()
+            e = BadRequest('No such employee exists')
+            e.data = { 
+                'type' : 'EmployeeGetException',
+                'message' : 'Employee not found',
+                'detail' : 'The employee passed to API does not exists in database',
+                'code' : 1901,
+                'instance' : emp_id
+            }
+            raise e
 
 
 
