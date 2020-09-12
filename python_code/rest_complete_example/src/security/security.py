@@ -180,3 +180,34 @@ class Security:
         self.return_message = 'Secuity updated sucessfully created'
 
         return self.status
+
+
+    def delete_security_in_db(self):
+        cur = self.conn.cursor()
+        self.current_tm = datetime.datetime.now()
+        data = [self.master_id]
+        cur.execute('''Delete From securitydbo.master
+                        Where master_id = %s
+                        ''',
+                    data)
+        self.conn.commit()
+        print('security deleted')
+        cur.close()
+
+
+    def delete_security(self):
+        print('in delete function')
+        self.create_db_connection()
+        if self.is_existing_security() == 0:
+            print('security does not exists')
+            self.return_message = 'Security deletion failed'
+            self.message_detail = 'Security does not exists'
+            return self.status
+
+        self.delete_security_in_db()
+        self.close_db_connection()
+        self.status = True
+        self.errm = 'OK'
+        self.return_message = 'Secuity deleted sucessfully created'
+
+        return self.status
