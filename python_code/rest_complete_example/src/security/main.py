@@ -42,7 +42,7 @@ def security_handler(dml_type):
         bbc_ticker = req_data['bbc_ticker']
         wkn = req_data['wkn']
 
-    if dml_type == 'UPDATE' or dml_type == 'DELETE':
+    if dml_type == 'UPDATE' or dml_type == 'DELETE' or dml_type == 'GET':
         master_id = req_data['master_id']
     else:
         master_id = None
@@ -57,8 +57,10 @@ def security_handler(dml_type):
         is_valid_status = security_obj.create_security()
     elif dml_type == 'UPDATE':
         is_valid_status = security_obj.update_security()
-    else:
+    elif dml_type == 'UPDATE':
         is_valid_status = security_obj.delete_security()
+    else:
+        is_valid_status = security_obj.get_security()
 
     print('security status is : ' + str(is_valid_status))
 
@@ -70,6 +72,9 @@ def security_handler(dml_type):
         'system time': current_dt,
         'master_id': security_obj.master_id
     }
+
+    if dml_type == 'GET':
+        return_message['security_data'] = security_obj.security_ref_json
 
     print('return message is ')
     print(return_message)
@@ -100,6 +105,12 @@ def update_security():
 def delete_security():
     print('in delete security function')
     return security_handler('DELETE')
+    
+
+@app.route('/api/v1/security', methods=['GET'])
+def get_security():
+    print('in get security function')
+    return security_handler('GET')
     
 
 

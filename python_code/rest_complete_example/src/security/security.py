@@ -2,6 +2,7 @@
 
 import psycopg2
 import datetime
+from flask import jsonify
 
 
 class Security:
@@ -26,10 +27,11 @@ class Security:
         self.errm = ''
         self.return_message = ''
         self.message_detail = ''
+        self.security_ref_json = None
 
         print('init done')
 
-    def create_db_connection(self):
+    def __create_db_connection(self):
         self.conn = psycopg2.connect(
             host="openbsd.64",
             database="pgdb1",
@@ -38,7 +40,7 @@ class Security:
 
         print('connected to db: ' + str(self.conn))
 
-    def valid_security_request(self):
+    def __valid_security_request(self):
         self.status = True
         if not self.provider_desc or not self.sub_provider_desc or not self.security_name or not self.security_type:
             self.status = False
@@ -51,14 +53,14 @@ class Security:
         print('in validation, security status is ' + str(self.status))
         return self.status
 
-    def create_new_master_id(self):
+    def __create_new_master_id(self):
         cur = self.conn.cursor()
         cur.execute("select nextval('securitydbo.master_id_seq')")
         self.master_id = cur.fetchone()[0]
         cur.close()
         return self.master_id
 
-    def insert_new_security_in_db(self):
+    def __insert_new_security_in_db(self):
         cur = self.conn.cursor()
         self.current_tm = datetime.datetime.now()
         data = [self.master_id, self.provider_desc, self.sub_provider_desc, self.security_name,
@@ -100,20 +102,20 @@ class Security:
         print('new security inserted')
         cur.close()
 
-    def close_db_connection(self):
+    def __close_db_connection(self):
         self.conn.close()
 
     def create_security(self):
-        if not self.valid_security_request():
-            print ('validation failed returning : ' + str(self.status))
+        if not self.__valid_security_request():
+            print('validation failed returning : ' + str(self.status))
             self.return_message = 'Security creation failed'
             self.message_detail = 'New security creation failed at attribute validation step'
             return self.status
 
-        self.create_db_connection()
-        self.create_new_master_id()
-        self.insert_new_security_in_db()
-        self.close_db_connection()
+        self.__create_db_connection()
+        self.__create_new_master_id()
+        self.__insert_new_security_in_db()
+        self.__close_db_connection()
         self.status = True
         self.errm = 'OK'
         self.return_message = 'New secuity sucessfully created'
@@ -121,9 +123,7 @@ class Security:
 
         return self.status
 
-
-
-    def update_security_in_db(self):
+    def __update_security_in_db(self):
         cur = self.conn.cursor()
         self.current_tm = datetime.datetime.now()
         data = [self.provider_desc, self.sub_provider_desc, self.security_name,
@@ -149,40 +149,40 @@ class Security:
         print('security updated')
         cur.close()
 
-    def is_existing_security(self):
+    def __is_existing_security(self):
         cur = self.conn.cursor()
+        if self.master_id == '':
+            return 0
         cur.execute('''select count(*) from securitydbo.master where
                        master_id = %s''', [self.master_id])
         cnt = cur.fetchone()[0]
         print('security existance count is:', cnt)
         return cnt
 
-
     def update_security(self):
         print('in update function')
-        if not self.valid_security_request():
-            print ('validation failed returning : ' + str(self.status))
+        if not self.__valid_security_request():
+            print('validation failed returning : ' + str(self.status))
             self.return_message = 'Security updation failed'
             self.message_detail = 'Security updation failed at attribute validation step'
             return self.status
 
-        self.create_db_connection()
-        if self.is_existing_security() == 0:
+        self.__create_db_connection()
+        if self.__is_existing_security() == 0:
             print('security does not exists')
             self.return_message = 'Security updation failed'
             self.message_detail = 'Security does not exists'
             return self.status
 
-        self.update_security_in_db()
-        self.close_db_connection()
+        self.__update_security_in_db()
+        self.__close_db_connection()
         self.status = True
         self.errm = 'OK'
         self.return_message = 'Secuity updated sucessfully created'
 
         return self.status
 
-
-    def delete_security_in_db(self):
+    def __delete_security_in_db(self):
         cur = self.conn.cursor()
         self.current_tm = datetime.datetime.now()
         data = [self.master_id]
@@ -194,20 +194,73 @@ class Security:
         print('security deleted')
         cur.close()
 
-
     def delete_security(self):
         print('in delete function')
-        self.create_db_connection()
-        if self.is_existing_security() == 0:
+        self.__create_db_connection()
+        if self.__is_existing_security() == 0:
             print('security does not exists')
             self.return_message = 'Security deletion failed'
             self.message_detail = 'Security does not exists'
             return self.status
 
-        self.delete_security_in_db()
-        self.close_db_connection()
+        self.__delete_security_in_db()
+        self.__close_db_connection()
         self.status = True
         self.errm = 'OK'
         self.return_message = 'Secuity deleted sucessfully created'
+
+        return self.status
+
+
+    def __get_security_from_db(self):
+        cur = self.conn.cursor()
+
+        data = [self.master_id]
+        cur.execute('''select
+                        master_id, provider_desc, sub_provider_desc, security_name,
+                        security_type, rating, isin, cusip, cins, live_cusip, sedol,
+                        bbc_ticker, wkn, insert_ts, update_ts
+                       from
+                        securitydbo.master
+                       where
+                        master_id = %s
+                    ''', data)
+        (self.master_id, self.provider_desc, self.sub_provider_desc, self.security_name,
+         self.security_type, self.rating, self.isin, self.cusip, self.cins, self.live_cusip, self.sedol,
+         self.bbc_ticker, self.wkn, self.insert_ts, self.update_ts) = cur.fetchone()
+        cur.close()
+
+
+    def get_security(self):
+        print('in get function')
+        self.__create_db_connection()
+        if self.__is_existing_security() == 0:
+            print('security does not exists')
+            self.return_message = 'Security get failed'
+            self.message_detail = 'Security does not exists'
+            return self.status
+        self.__get_security_from_db()
+        self.__close_db_connection()
+        self.status = True
+        self.errm = 'OK'
+        self.return_message = 'Secuity fetched sucessfully'
+
+        self.security_ref_json = {
+            'master_id' : self.master_id,
+            'provider_desc' : self.provider_desc,
+            'sub_provider_desc' : self.sub_provider_desc,
+            'security_name' : self.security_name,
+            'security_type' : self.security_type,
+            'rating' : self.rating,
+            'isin' : self.isin,
+            'cusip' : self.cusip,
+            'cins' : self.cins,
+            'live_cusip' : self.live_cusip,
+            'sedol' : self.sedol,
+            'bbc_ticker' : self.bbc_ticker,
+            'wkn' : self.wkn,
+            'insert_ts' : self.insert_ts,
+            'update_ts' : self.update_ts
+        }
 
         return self.status
