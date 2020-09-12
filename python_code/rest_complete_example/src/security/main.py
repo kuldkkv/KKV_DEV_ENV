@@ -57,7 +57,7 @@ def security_handler(dml_type):
         is_valid_status = security_obj.create_security()
     elif dml_type == 'UPDATE':
         is_valid_status = security_obj.update_security()
-    elif dml_type == 'UPDATE':
+    elif dml_type == 'DELETE':
         is_valid_status = security_obj.delete_security()
     else:
         is_valid_status = security_obj.get_security()
