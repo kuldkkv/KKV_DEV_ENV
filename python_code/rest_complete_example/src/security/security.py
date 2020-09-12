@@ -7,7 +7,7 @@ import datetime
 class Security:
     def __init__(self, provider_desc, sub_provider_desc, security_name,
                  security_type, rating, isin, cusip, cins, live_cusip, sedol,
-                 bbc_ticker, wkn):
+                 bbc_ticker, wkn, master_id):
         self.provider_desc = provider_desc
         self.sub_provider_desc = sub_provider_desc
         self.security_name = security_name
@@ -21,9 +21,12 @@ class Security:
         self.bbc_ticker = bbc_ticker
         self.wkn = wkn
         self.conn = None
-        self.master_id = None
+        self.master_id = master_id
         self.status = None
-        self.errm = None
+        self.errm = ''
+        self.return_message = ''
+        self.message_detail = ''
+
         print('init done')
 
     def create_db_connection(self):
@@ -103,6 +106,8 @@ class Security:
     def create_security(self):
         if not self.valid_security_request():
             print ('validation failed returning : ' + str(self.status))
+            self.return_message = 'Security creation failed'
+            self.message_detail = 'New security creation failed at attribute validation step'
             return self.status
 
         self.create_db_connection()
@@ -110,6 +115,68 @@ class Security:
         self.insert_new_security_in_db()
         self.close_db_connection()
         self.status = True
-        self.errm = None
+        self.errm = 'OK'
+        self.return_message = 'New secuity sucessfully created'
+        self.message_detail = 'New secuity sucessfully created'
+
+        return self.status
+
+
+
+    def update_security_in_db(self):
+        cur = self.conn.cursor()
+        self.current_tm = datetime.datetime.now()
+        data = [self.provider_desc, self.sub_provider_desc, self.security_name,
+                self.security_type, self.rating, self.isin, self.cusip, self.cins, self.live_cusip, self.sedol, self.bbc_ticker, self.wkn, self.current_tm, self.master_id]
+        cur.execute('''Update securitydbo.master set
+                        provider_desc = %s,
+                        sub_provider_desc = %s,
+                        security_name = %s,
+                        security_type = %s,
+                        rating = %s,
+                        isin = %s,
+                        cusip = %s,
+                        cins = %s,
+                        live_cusip = %s,
+                        sedol = %s,
+                        bbc_ticker = %s,
+                        wkn = %s,
+                        update_ts = %s
+                        Where master_id = %s
+                        ''',
+                    data)
+        self.conn.commit()
+        print('security updated')
+        cur.close()
+
+    def is_existing_security(self):
+        cur = self.conn.cursor()
+        cur.execute('''select count(*) from securitydbo.master where
+                       master_id = %s''', [self.master_id])
+        cnt = cur.fetchone()[0]
+        print('security existance count is:', cnt)
+        return cnt
+
+
+    def update_security(self):
+        print('in update function')
+        if not self.valid_security_request():
+            print ('validation failed returning : ' + str(self.status))
+            self.return_message = 'Security updation failed'
+            self.message_detail = 'Security updation failed at attribute validation step'
+            return self.status
+
+        self.create_db_connection()
+        if self.is_existing_security() == 0:
+            print('security does not exists')
+            self.return_message = 'Security updation failed'
+            self.message_detail = 'Security does not exists'
+            return self.status
+
+        self.update_security_in_db()
+        self.close_db_connection()
+        self.status = True
+        self.errm = 'OK'
+        self.return_message = 'Secuity updated sucessfully created'
 
         return self.status

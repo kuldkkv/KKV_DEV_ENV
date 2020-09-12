@@ -10,10 +10,8 @@ import datetime
 app = Flask(__name__)
 
 
-@app.route('/api/v1/createsecurity', methods=['POST'])
-def create_security():
-    print('in create security function')
-
+def security_handler(dml_type):
+    print('in handler function, type: ' + dml_type)
     current_dt = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     req_data = request.get_json()
     provider_desc = req_data['provider_desc']
@@ -28,35 +26,57 @@ def create_security():
     sedol = req_data['sedol']
     bbc_ticker = req_data['bbc_ticker']
     wkn = req_data['wkn']
+    if dml_type == 'UPDATE':
+        master_id = req_data['master_id']
+    else:
+        master_id = None
+        
 
     security_obj = Security(provider_desc, sub_provider_desc,
                             security_name,
                             security_type, rating, isin, cusip, cins, live_cusip, sedol,
-                            bbc_ticker, wkn)
+                            bbc_ticker, wkn, master_id)
 
-    is_valid_status = security_obj.create_security()
-    print('In main : ' + str(is_valid_status))
+    if dml_type == 'CREATE':
+        is_valid_status = security_obj.create_security()
+    else:
+        is_valid_status = security_obj.update_security()
+
+    print('security status is : ' + str(is_valid_status))
+
+    return_message = {
+        'type': security_obj.errm,
+        'message': security_obj.return_message,
+        'detail': security_obj.message_detail,
+        'request_data': req_data,
+        'system time': current_dt,
+        'master_id': security_obj.master_id
+    }
+
+    print('return message is ')
+    print(return_message)
 
     if not is_valid_status:
         print('in abort step ' + str(security_obj.errm))
-        e1 = {
-            'type': security_obj.errm,
-            'message': 'Security creation failed',
-            'detail': 'New security creation failed at attribute validation step',
-            'request_data': req_data,
-            'system time': current_dt
-        }
-        response = make_response(jsonify(message=e1), 400)
+        response = make_response(jsonify(message = return_message), 400)
         abort(response)
     else:
         print('passed validation step')
-        return_message = {
-            'message': 'New secuity sucessfully created',
-            'master_id': security_obj.master_id
-        }
         print('step 5')
         return jsonify({'message': return_message}), 201
 
+
+@app.route('/api/v1/createsecurity', methods=['POST'])
+def create_security():
+    print('in create security function')
+    return security_handler('CREATE')
+    
+
+@app.route('/api/v1/updatesecurity', methods=['PUT'])
+def update_security():
+    print('in update security function')
+    return security_handler('UPDATE')
+    
 
 def main():
     api = Api(app)
