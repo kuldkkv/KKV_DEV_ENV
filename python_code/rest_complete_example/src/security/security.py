@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import psycopg2
 import datetime
 from flask import jsonify
 from security_base import SecurityBase
@@ -9,14 +8,29 @@ from security_base import SecurityBase
 class Security(SecurityBase):
     def __init__(self, provider_desc, sub_provider_desc, security_name,
                  security_type, rating, isin, cusip, cins, live_cusip, sedol,
-                 bbc_ticker, wkn, master_id):
+                 bbc_ticker, wkn, master_id, op_type):
 
         super().__init__(provider_desc, sub_provider_desc, security_name,
                  security_type, rating, isin, cusip, cins, live_cusip, sedol,
                  bbc_ticker, wkn, master_id)
+        self.op_type = op_type
         print('init done')
 
 
+    def serve(self):
+        if self.op_type == 'POST':
+            return self.create_security()
+        elif self.op_type == 'PUT':
+            return self.update_security()
+        elif self.op_type == 'DELETE':
+            return self.delete_security()
+        elif self.op_type == 'GET':
+            return self.get_security()
+        else:
+            raise Exception('invalid security type: ' + str(self.op_type))
+
+
+        
     def create_security(self):
         if not super()._SecurityBase__valid_security_request():
             print('validation failed returning : ' + str(self.status))

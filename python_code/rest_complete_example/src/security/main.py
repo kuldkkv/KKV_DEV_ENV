@@ -10,57 +10,30 @@ import datetime
 app = Flask(__name__)
 
 
-def security_handler(dml_type):
-    print('in handler function, type: ' + dml_type)
-    provider_desc = None
-    sub_provider_desc = None
-    security_name = None
-    security_type = None
-    rating = None
-    isin = None
-    cusip = None
-    cins = None
-    live_cusip = None
-    sedol = None
-    bbc_ticker = None
-    wkn = None
+def security_handler(op_type):
+    print('in handler function, type: ' + op_type)
 
     current_dt = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-    req_data = request.get_json()
+    json_data = request.get_json()
 
-    if dml_type == 'UPDATE' or dml_type == 'CREATE':
-        provider_desc = req_data['provider_desc']
-        sub_provider_desc = req_data['sub_provider_desc']
-        security_name = req_data['security_name']
-        security_type = req_data['security_type']
-        rating = req_data['rating']
-        isin = req_data['isin']
-        cusip = req_data['cusip']
-        cins = req_data['cins']
-        live_cusip = req_data['live_cusip']
-        sedol = req_data['sedol']
-        bbc_ticker = req_data['bbc_ticker']
-        wkn = req_data['wkn']
+    security_obj = Security(
+                        json_data.get('provider_desc'),
+                        json_data.get('sub_provider_desc'),
+                        json_data.get('security_name'),
+                        json_data.get('security_type'),
+                        json_data.get('rating'),
+                        json_data.get('isin'),
+                        json_data.get('cusip'),
+                        json_data.get('cins'),
+                        json_data.get('live_cusip'),
+                        json_data.get('sedol'),
+                        json_data.get('bbc_ticker'),
+                        json_data.get('wkn'),
+                        json_data.get('master_id'),
+                        op_type
+                    )
 
-    if dml_type == 'UPDATE' or dml_type == 'DELETE' or dml_type == 'GET':
-        master_id = req_data['master_id']
-    else:
-        master_id = None
-        
-
-    security_obj = Security(provider_desc, sub_provider_desc,
-                            security_name,
-                            security_type, rating, isin, cusip, cins, live_cusip, sedol,
-                            bbc_ticker, wkn, master_id)
-
-    if dml_type == 'CREATE':
-        is_valid_status = security_obj.create_security()
-    elif dml_type == 'UPDATE':
-        is_valid_status = security_obj.update_security()
-    elif dml_type == 'DELETE':
-        is_valid_status = security_obj.delete_security()
-    else:
-        is_valid_status = security_obj.get_security()
+    is_valid_status = security_obj.serve()
 
     print('security status is : ' + str(is_valid_status))
 
@@ -68,12 +41,12 @@ def security_handler(dml_type):
         'type': security_obj.errm,
         'message': security_obj.return_message,
         'detail': security_obj.message_detail,
-        'request_data': req_data,
+        'request_data': json_data,
         'system time': current_dt,
         'master_id': security_obj.master_id
     }
 
-    if dml_type == 'GET':
+    if op_type == 'GET':
         return_message['security_data'] = security_obj.security_ref_json
 
     print('return message is ')
@@ -85,20 +58,19 @@ def security_handler(dml_type):
         abort(response)
     else:
         print('passed validation step')
-        print('step 5')
         return jsonify({'message': return_message}), 201
 
 
 @app.route('/api/v1/createsecurity', methods=['POST'])
 def create_security():
     print('in create security function')
-    return security_handler('CREATE')
+    return security_handler('POST')
     
 
 @app.route('/api/v1/updatesecurity', methods=['PUT'])
 def update_security():
     print('in update security function')
-    return security_handler('UPDATE')
+    return security_handler('PUT')
     
 
 @app.route('/api/v1/deletesecurity', methods=['DELETE'])
