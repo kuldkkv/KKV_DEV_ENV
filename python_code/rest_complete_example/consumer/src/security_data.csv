@@ -1,0 +1,76 @@
+provider_desc,sub_provider_desc,security_name,security_type,rating,isin,cusip,cins,live_cusip,sedol,bbc_ticker,wkn
+BSE,BSE25,Asian Paints Ltd,Equity,AA,INE021A01026,,,,,,500820
+BSE,BSE26,Axis Bank Ltd,Equity,AA,INE238A01034,,,,,,532215
+BSE,BSE27,Bajaj Auto Ltd,Equity,A+,INE917I01010,,,,,,532977
+BSE,BSE28,Bajaj Finance Ltd,Equity,AA+,INE296A01024,,,,,,500034
+BSE,BSE29,Bajaj Finserv Ltd,Equity,AAA,INE918I01018,,,,,,532978
+BSE,BSE30,Bharti Airtel Ltd,Equity,AB,INE397D01024,,,,,,532454
+BSE,BSE31,HCL Technologies Ltd,Equity,A,INE860A01027,,,,,,532281
+BSE,BSE32,HDFC Bank Ltd,Equity,A,INE040A01034,,,,,,500180
+BSE,BSE33,Hindustan Unilever Ltd,Equity,A+,INE030A01027,,,,,,500696
+BSE,BSE34,Housing Development Finance Corp,Equity,AA+,INE001A01036,,,,,,500010
+BSE,BSE35,ICICI Bank Ltd,Equity,AAA,INE090A01021,,,,,,532174
+BSE,BSE36,IndusInd Bank Ltd,Equity,A,INE095A01012,,,,,,532187
+BSE,BSE37,Infosys Ltd,Equity,A,INE009A01021,,,,,,500209
+BSE,BSE38,ITC Ltd,Equity,A,INE154A01025,,,,,,500875
+BSE,BSE39,Kotak Mahindra Bank Ltd,Equity,A,INE237A01028,,,,,,500247
+BSE,BSE40,Larsen & Toubro Ltd,Equity,A+,INE018A01030,,,,,,500510
+BSE,BSE41,Mahindra & Mahindra Ltd,Equity,AA+,INE101A01026,,,,,,500520
+BSE,BSE42,Maruti Suzuki India Ltd,Equity,AAA,INE585B01010,,,,,,532500
+BSE,BSE43,Nestle India Ltd,Equity,AA,INE239A01016,,,,,,500790
+BSE,BSE44,NTPC Ltd,Equity,AA,INE733E01010,,,,,,532555
+BSE,BSE45,Oil & Natural Gas Corp Ltd,Equity,A+,INE213A01029,,,,,,500312
+BSE,BSE46,Power Grid Corp of India Ltd,Equity,A,INE752E01010,,,,,,532898
+BSE,BSE47,Reliance Industries Ltd,Equity,A,INE002A01018,,,,,,500325
+BSE,BSE48,State Bank of India,Equity,A,INE062A01020,,,,,,500112
+BSE,BSE49,Sun Pharmaceutical Industries Ltd,Equity,B,INE044A01036,,,,,,524715
+NSE,NSE50,Adani Ports and Special Economic Zone Ltd.,Equity,,INE742F01042,,,,,,ADANIPORTS
+NSE,NSE50,Asian Paints Ltd.,Equity,,INE021A01026,,,,,,ASIANPAINT
+NSE,NSE50,Axis Bank Ltd.,Equity,,INE238A01034,,,,,,AXISBANK
+NSE,NSE50,Bajaj Auto Ltd.,Equity,,INE917I01010,,,,,,BAJAJ-AUTO
+NSE,NSE50,Bajaj Finance Ltd.,Equity,,INE296A01024,,,,,,BAJFINANCE
+NSE,NSE50,Bajaj Finserv Ltd.,Equity,,INE918I01018,,,,,,BAJAJFINSV
+NSE,NSE50,Bharat Petroleum Corporation Ltd.,Equity,,INE029A01011,,,,,,BPCL
+NSE,NSE50,Bharti Airtel Ltd.,Equity,,INE397D01024,,,,,,BHARTIARTL
+NSE,NSE50,Bharti Infratel Ltd.,Equity,,INE121J01017,,,,,,INFRATEL
+NSE,NSE50,Britannia Industries Ltd.,Equity,,INE216A01030,,,,,,BRITANNIA
+NSE,NSE50,Cipla Ltd.,Equity,,INE059A01026,,,,,,CIPLA
+NSE,NSE50,Coal India Ltd.,Equity,,INE522F01014,,,,,,COALINDIA
+NSE,NSE50,Dr. Reddy's Laboratories Ltd.,Equity,,INE089A01023,,,,,,DRREDDY
+NSE,NSE50,Eicher Motors Ltd.,Equity,,INE066A01021,,,,,,EICHERMOT
+NSE,NSE50,GAIL (India) Ltd.,Equity,,INE129A01019,,,,,,GAIL
+NSE,NSE50,Grasim Industries Ltd.,Equity,,INE047A01021,,,,,,GRASIM
+NSE,NSE50,HCL Technologies Ltd.,Equity,,INE860A01027,,,,,,HCLTECH
+NSE,NSE50,HDFC Bank Ltd.,Equity,,INE040A01034,,,,,,HDFCBANK
+NSE,NSE50,HDFC Life Insurance Company Ltd.,Equity,,INE795G01014,,,,,,HDFCLIFE
+NSE,NSE50,Hero MotoCorp Ltd.,Equity,,INE158A01026,,,,,,HEROMOTOCO
+NSE,NSE50,Hindalco Industries Ltd.,Equity,,INE038A01020,,,,,,HINDALCO
+NSE,NSE50,Hindustan Unilever Ltd.,Equity,,INE030A01027,,,,,,HINDUNILVR
+NSE,NSE50,Housing Development Finance Corporation Ltd.,Equity,,INE001A01036,,,,,,HDFC
+NSE,NSE50,ICICI Bank Ltd.,Equity,,INE090A01021,,,,,,ICICIBANK
+NSE,NSE50,ITC Ltd.,Equity,,INE154A01025,,,,,,ITC
+NSE,NSE50,Indian Oil Corporation Ltd.,Equity,,INE242A01010,,,,,,IOC
+NSE,NSE50,IndusInd Bank Ltd.,Equity,,INE095A01012,,,,,,INDUSINDBK
+NSE,NSE50,Infosys Ltd.,Equity,,INE009A01021,,,,,,INFY
+NSE,NSE50,JSW Steel Ltd.,Equity,,INE019A01038,,,,,,JSWSTEEL
+NSE,NSE50,Kotak Mahindra Bank Ltd.,Equity,,INE237A01028,,,,,,KOTAKBANK
+NSE,NSE50,Larsen & Toubro Ltd.,Equity,,INE018A01030,,,,,,LT
+NSE,NSE50,Mahindra & Mahindra Ltd.,Equity,,INE101A01026,,,,,,M&M
+NSE,NSE50,Maruti Suzuki India Ltd.,Equity,,INE585B01010,,,,,,MARUTI
+NSE,NSE50,NTPC Ltd.,Equity,,INE733E01010,,,,,,NTPC
+NSE,NSE50,Nestle India Ltd.,Equity,,INE239A01016,,,,,,NESTLEIND
+NSE,NSE50,Oil & Natural Gas Corporation Ltd.,Equity,,INE213A01029,,,,,,ONGC
+NSE,NSE50,Power Grid Corporation of India Ltd.,Equity,,INE752E01010,,,,,,POWERGRID
+NSE,NSE50,Reliance Industries Ltd.,Equity,,INE002A01018,,,,,,RELIANCE
+NSE,NSE50,Shree Cement Ltd.,Equity,,INE070A01015,,,,,,SHREECEM
+NSE,NSE50,State Bank of India,Equity,,INE062A01020,,,,,,SBIN
+NSE,NSE50,Sun Pharmaceutical Industries Ltd.,Equity,,INE044A01036,,,,,,SUNPHARMA
+NSE,NSE50,Tata Consultancy Services Ltd.,Equity,,INE467B01029,,,,,,TCS
+NSE,NSE50,Tata Motors Ltd.,Equity,,INE155A01022,,,,,,TATAMOTORS
+NSE,NSE50,Tata Steel Ltd.,Equity,,INE081A01012,,,,,,TATASTEEL
+NSE,NSE50,Tech Mahindra Ltd.,Equity,,INE669C01036,,,,,,TECHM
+NSE,NSE50,Titan Company Ltd.,Equity,,INE280A01028,,,,,,TITAN
+NSE,NSE50,UPL Ltd.,Equity,,INE628A01036,,,,,,UPL
+NSE,NSE50,UltraTech Cement Ltd.,Equity,,INE481G01011,,,,,,ULTRACEMCO
+NSE,NSE50,Wipro Ltd.,Equity,,INE075A01022,,,,,,WIPRO
+NSE,NSE50,Zee Entertainment Enterprises Ltd.,Equity,,INE256A01028,,,,,,ZEEL
