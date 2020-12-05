@@ -14,8 +14,10 @@ def security_handler(op_type):
     print('in handler function, type: ' + op_type)
 
     current_dt = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    print( "current date is", current_dt)
     json_data = request.get_json()
 
+    print( "before security call")
     security_obj = Security(
                         json_data.get('provider_desc'),
                         json_data.get('sub_provider_desc'),
