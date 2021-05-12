@@ -5,11 +5,16 @@ import sys
 
 conn = pika.BlockingConnection(pika.ConnectionParameters('centos'))
 channel = conn.channel()
-channel.queue_declare(queue = 'hello')
+channel.queue_declare(queue='hello', durable=True)
 
-channel.basic_publish(exchange = '',
-                routing_key = 'hello',
-                body = sys.argv[1])
+message = ' '.join(sys.argv[1:]) or 'Hello World!'
+channel.basic_publish(exchange='',
+                      routing_key='hello',
+                      body=message,
+                      properties=pika.BasicProperties(
+                          delivery_mode=2,
+                      )
+                      )
 
 print(" message sent")
 
