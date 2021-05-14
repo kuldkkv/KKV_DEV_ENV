@@ -12,7 +12,7 @@ Q_ROUTING_KEY = 'loader_start'
 DB_HOST = 'centos'
 DB_NAME = 'sourcedb'
 DB_USR = 'core'
-DB_PASS = 'point007'
+DB_PASS = '##'
 STG_TABLE = 'stg.nse_stock_data'
 CORE_TABLE = 'core.nse_stock_data'
 
