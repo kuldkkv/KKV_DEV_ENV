@@ -26,7 +26,6 @@ def get_data_from_db(v_eff_dt, v_symbol, v_series):
     cur = conn.cursor()
     sql = '''
             SELECT
-                    LOAD_ID,
                     SYMBOL,
                     SERIES,
                     OPEN,
@@ -39,10 +38,9 @@ def get_data_from_db(v_eff_dt, v_symbol, v_series):
                     TOTTRDVAL,
                     EFF_DT,
                     TOTALTRADES,
-                    ISIN,
-                    INSERT_TS
+                    ISIN
             FROM
-                    CORE.NSE_STOCK_DATA
+                    STG.NSE_STOCK_DATA
             WHERE
                     EFF_DT = %s
                     AND
@@ -55,21 +53,19 @@ def get_data_from_db(v_eff_dt, v_symbol, v_series):
     d = dict()
     rows_output = list()
     for row in result_set:
-        d['LOAD_ID'] = row[0]
-        d['SYMBOL'] = row[1]
-        d['SERIES'] = row[2]
-        d['OPEN'] = str(row[3])
-        d['HIGH'] = str(row[4])
-        d['LOW'] = str(row[5])
-        d['CLOSE'] = str(row[6])
-        d['LAST'] = str(row[7])
-        d['PREVCLOSE'] = str(row[8])
-        d['TOTTRDQTY'] = str(row[9])
-        d['TOTTRDVAL'] = str(row[10])
-        d['EFF_DT'] = row[11]
-        d['TOTALTRADES'] = str(row[12])
-        d['ISIN'] = row[13]
-        d['INSERT_TS'] = row[14]
+        d['SYMBOL'] = row[0]
+        d['SERIES'] = row[1]
+        d['OPEN'] = str(row[2])
+        d['HIGH'] = str(row[3])
+        d['LOW'] = str(row[4])
+        d['CLOSE'] = str(row[5])
+        d['LAST'] = str(row[6])
+        d['PREVCLOSE'] = str(row[7])
+        d['TOTTRDQTY'] = str(row[8])
+        d['TOTTRDVAL'] = str(row[9])
+        d['EFF_DT'] = row[10]
+        d['TOTALTRADES'] = str(row[11])
+        d['ISIN'] = row[12]
         d['AT'] = datetime.datetime.now()
         rows_output.append(d)
 

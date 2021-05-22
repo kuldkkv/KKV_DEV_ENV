@@ -4,8 +4,14 @@ import requests
 import pprint
 import psycopg2
 import pandas as pd
+from datetime import datetime
+import pika
 
 
+Q_HOST = 'centos'
+Q_EXCH = 'q_consumer_notif'
+Q_EXCH_TYPE = 'topic'
+Q_ROUTING_KEY = 'nse_stock_data'
 API_HOST = 'http://centos:5003'
 API_HEADER = {'Content-Type' : 'application/json'}
 DB_HOST = 'centos'
@@ -14,10 +20,15 @@ DB_USR = 'core'
 DB_PASS = 'point007'
 
 
-def get_api_params_from_db(source_desc):
+def connect_to_db():
     conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME,
                             user = DB_USR, password = DB_PASS)
     print('connected to db')
+    return conn
+
+
+
+def get_api_params_from_db(conn, source_desc):
     cur = conn.cursor()
     print('[%s]' % source_desc)
 
@@ -31,7 +42,6 @@ def get_api_params_from_db(source_desc):
     for r in rs:
         print(r)
     cur.close()
-    conn.close()
     return rs
 
 
@@ -45,9 +55,7 @@ def call_api(param_set):
                         '/series/' + r[2]
         print('>>> calling ', url)
         response = requests.get(url, headers = API_HEADER)
-        print('*** api response code ' + str(response.status_code))
-        print("*** headers:"+ str(response.headers))
-        print("*** api output:")
+        print('*** api response code ' + str(response.status_code), end = ' ')
         #print(pprint.pprint(response.json()))
         #api_output_list.append(response.json())
 
@@ -59,19 +67,74 @@ def call_api(param_set):
     return rows_df
 
 
+def insert_to_db(conn, df):
+    #cur = conn.cursor()
 
-def main():
-    param_set = get_api_params_from_db('N1')
+    del df['AT']
+    now = datetime.now().strftime('%m%d%H%M%S')
+    cols = ','.join(list(df.columns))
+    tpls = [tuple(x) for x in df.to_numpy()]
+    
+    cols = cols + ',LOAD_ID'
+    sql = 'insert into core.nse_stock_data (%s) values (%%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %%s, %s)' % (cols, now)
+    print(sql)
+    
+    cur = conn.cursor()
+    cur.executemany(sql, tpls)
+    conn.commit()
+    print('inserted [%d] rows.' % cur.rowcount)
+    cur.close()
+
+
+
+
+def api_caller_main():
+    conn = connect_to_db()
+    param_set = get_api_params_from_db(conn, '100')
     for r in param_set:
         print(r)
     #api_output_list = call_api(param_set)
     rows_df = call_api(param_set)
 
-    print(rows_df)
+    insert_to_db(conn, rows_df)
+
+    conn.close()
 
     #for r in api_output_list:
     #    print(pprint.pprint(r))
 
+
+
+def queue_callback(ch, method, properties, body):
+    data_load_status = body.decode('utf-8')
+    print('data_load_statis is [%s]' % (data_load_status))
+    if data_load_status == 'SUCCESS':
+        api_caller_main()
+    else:
+        print('data load is not successfull, no loader called.')
+
+
+
+def check_for_notification():
+    conn = pika.BlockingConnection(pika.ConnectionParameters(Q_HOST))
+    channel = conn.channel()
+
+    channel.exchange_declare(exchange=Q_EXCH, exchange_type=Q_EXCH_TYPE)
+    result = channel.queue_declare(queue='', exclusive=True)
+    queue = result.method.queue
+    channel.queue_bind(exchange=Q_EXCH, queue=queue, routing_key=Q_ROUTING_KEY)
+
+    print('connected to queue/topic [%s/%s]' % (Q_EXCH, Q_ROUTING_KEY))
+    print('waiting for messages')
+
+    channel.basic_consume(
+        queue=queue, on_message_callback=queue_callback, auto_ack=True)
+    channel.start_consuming()
+    conn.close()
+
+
+def main():
+    check_for_notification()
 
 
 if __name__ == '__main__':
