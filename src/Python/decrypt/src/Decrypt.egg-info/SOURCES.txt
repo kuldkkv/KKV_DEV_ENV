@@ -1,0 +1,8 @@
+LICENSE
+README.md
+pyproject.toml
+setup.cfg
+src/Decrypt.egg-info/PKG-INFO
+src/Decrypt.egg-info/SOURCES.txt
+src/Decrypt.egg-info/dependency_links.txt
+src/Decrypt.egg-info/top_level.txt

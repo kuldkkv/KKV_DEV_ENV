@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: utils
+Version: 1.0.0
+Summary: Python package containing wrappers for common utilities
+Home-page: UNKNOWN
+Author: KKV
+Author-email: kuld.kkv@gmail.com
+License: UNKNOWN
+Description: Python package containing wrappers for common utilities for ease of use
+Keywords: python,utils
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: cross platform
