@@ -6,7 +6,10 @@ from waitress import serve
 from werkzeug.exceptions import BadRequest
 import datetime
 import psycopg2
+import os
+import logging
 
+import utils    # local lib
 
 
 app = Flask(__name__)
@@ -14,14 +17,25 @@ app = Flask(__name__)
 DB_HOST = 'centos'
 DB_NAME = 'sourcedb'
 DB_USR = 'core'
-DB_PASS = 'point007'
+DB_PASS_FILE = os.environ['HOME'] + '/config/pg_sourcedb_core.enc'
 
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+conn = None
 
 
 def get_data_from_db(v_eff_dt, v_symbol, v_series):
-    conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME,
-                            user = DB_USR, password = DB_PASS)
-    print('connected to db')
+    global conn
+
+    if not conn:
+        db_pass = utils.decrypt(data_file = DB_PASS_FILE)
+        conn = psycopg2.connect(host = DB_HOST, dbname = DB_NAME,
+                                user = DB_USR, password = db_pass)
+        logger.info('connected to db')
+    else:
+        logger.info('reusing connection')
 
     cur = conn.cursor()
     sql = '''
@@ -70,18 +84,16 @@ def get_data_from_db(v_eff_dt, v_symbol, v_series):
         rows_output.append(d)
 
     cur.close()
-    conn.close()
+    conn.commit()
     return rows_output
 
 
 @app.route('/service/nse_stock_data/eff_dt/<v_eff_dt>/symbol/<v_symbol>/series/<v_series>', methods=['GET'])
 def get_nse_stock_data(v_eff_dt, v_symbol, v_series = ''):
-    print('in get function')
-    print('input params are [%s] [%s] [%s]' % (v_eff_dt, v_symbol, v_series))
+    logger.info('Api called, input params are [%s] [%s] [%s]' % (v_eff_dt, v_symbol, v_series))
 
     result_set = get_data_from_db(v_eff_dt, v_symbol, v_series)
 
-    #print(result_set)
     return jsonify(result_set), 200
 
 
@@ -89,7 +101,10 @@ def get_nse_stock_data(v_eff_dt, v_symbol, v_series = ''):
 def main():
     api = Api(app)
 
-    print('services started ...')
+    logger.info('-' * 40)
+    logger.info('\tAPI PUBLISHER Started')
+    logger.info('-' * 40)
+    logger.info('Api services started ...')
     serve(app, host = '0.0.0.0', port = '5003')
 
 
