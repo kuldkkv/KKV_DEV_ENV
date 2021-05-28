@@ -71,6 +71,9 @@ def call_api(param_set):
 def insert_to_db(conn, df):
     #cur = conn.cursor()
 
+    if df.empty:
+        logger.warning('api param list is empty')
+        return
     del df['AT']
     now = datetime.now().strftime('%m%d%H%M%S')
     cols = ','.join(list(df.columns))
