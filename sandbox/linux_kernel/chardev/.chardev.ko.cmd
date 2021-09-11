@@ -1,0 +1,1 @@
+cmd_/home/kkv/KKV_DEV_ENV/sandbox/linux_kernel/chardev/chardev.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds  --build-id  -o /home/kkv/KKV_DEV_ENV/sandbox/linux_kernel/chardev/chardev.ko /home/kkv/KKV_DEV_ENV/sandbox/linux_kernel/chardev/chardev.o /home/kkv/KKV_DEV_ENV/sandbox/linux_kernel/chardev/chardev.mod.o ;  true
