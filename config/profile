@@ -12,3 +12,4 @@ alias vi='vim'
 set -o vi
 echo "done"
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/mqm/lib64:/opt/mqm/lib
