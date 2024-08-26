@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: hello-minikube
+    env: dev
+  name: hello-minikube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-minikube
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: hello-minikube
+        env: dev
+    spec:
+      containers:
+      - image: kuldkkv/mywebapp:latest
+        name: mywebapp
+        ports:
+        - containerPort: 8001
+        resources: {}
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: hello-minikube
+    env: dev
+  name: hello-minikube
+spec:
+  ports:
+  - port: 8001
+    protocol: TCP
+    targetPort: 8001
+  selector:
+    app: hello-minikube
+  type: NodePort
+status:
+  loadBalancer: {}

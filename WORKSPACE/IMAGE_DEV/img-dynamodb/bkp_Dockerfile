@@ -1,0 +1,19 @@
+FROM ubuntu:22.04
+WORKDIR /usr/opt/dynamoDB
+COPY media/ media/ 
+RUN ls -la . media
+WORKDIR media
+RUN tar xvf dynamodb_local_latest.tar.gz
+RUN ls -la  ../media
+#RUN <<EOF
+#tar xvf dynamodb_local_latest.tar.gz
+#EOF
+#FROM ubuntu/jre:8-22.04_edge
+RUN apt-get update
+RUN apt-get install -y openjdk-21-jdk-headless
+#RUN pwd
+#CMD ["pwd"]
+#RUN java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+RUN ls -la  ../media
+CMD ["java", "-Djava.library.path=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-sharedDb"]
+#CMD ["sleep", "50000"]

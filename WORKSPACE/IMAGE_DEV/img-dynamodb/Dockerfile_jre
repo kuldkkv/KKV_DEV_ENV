@@ -1,0 +1,22 @@
+# Docker file to create image of AWS DynamoDB local
+#
+
+FROM docker.io/ibm-semeru-runtimes:open-21-jre-focal
+
+WORKDIR /usr/opt/dynamoDB
+
+COPY media/ media/
+
+WORKDIR media
+
+RUN echo ">>> preparing to install, media contents:"; \
+    ls -la . ; \
+    echo ">>> deflating tar"; \
+    tar xvf dynamodb_local_latest.tar.gz; \
+    echo ">>> media contents:"; \
+    ls -la  ../media; \
+    date; \
+    echo "java version is:"; \
+    java -version
+    
+CMD ["java", "-Djava.library.path=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-sharedDb"]

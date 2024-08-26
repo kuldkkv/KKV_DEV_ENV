@@ -1,0 +1,11 @@
+#FROM docker.io/library/openjdk:11-jre-slim
+FROM docker.io/library/ubuntu/jre:edge
+WORKDIR /usr/opt/dynamoDB
+COPY ./media2 .
+WORKDIR media2
+#RUN <<EOF
+#apt-get update
+#apt-get install tar
+#tar xf dynamodb_local_latest.tar.gz
+#EOF
+RUN java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
